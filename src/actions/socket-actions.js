@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { ApiUrl } from "~/env";
 
 import { LOGOUT } from "~/reducers/join-reducer";
-import { SOCKET_SET_CONNECTION_DATA, SOCKET_SET_LIVE_USER, RESET_SOCKET } from "~/reducers/socket-reducer";
+import { SOCKET_SET_CONNECTION_DATA, SOCKET_SET_LIVE_USER, RESET_SOCKET, SOCKET_GET_MESSAGES } from "~/reducers/socket-reducer";
 
 export const StartSocketConnection = () => (dispatch, getState) => {
   const { join_store } = getState();
@@ -39,6 +39,11 @@ export const StartSocketConnection = () => (dispatch, getState) => {
   socket.on("live", (user_count) => {
     dispatch(SOCKET_SET_LIVE_USER(user_count));
   });
+
+  socket.on("messages", (messages) => {
+    console.log("message", messages);
+    dispatch(SOCKET_GET_MESSAGES(messages));
+  });
 };
 
 export const DisconnectSocket = () => (dispatch, getState) => {
@@ -49,4 +54,12 @@ export const DisconnectSocket = () => (dispatch, getState) => {
   socket.emit("leaveRoom", room);
   dispatch(RESET_SOCKET());
   dispatch(LOGOUT());
+};
+
+export const ChatSendNewMessages = (message) => (dispatch, getState) => {
+  const { socket_store, join_store } = getState();
+  const { socket } = socket_store;
+  const { room } = join_store;
+
+  socket.emit("newMessages", { message, room });
 };

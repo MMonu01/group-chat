@@ -4,6 +4,7 @@ const initialState = {
   socket: null,
   socket_id: null,
   socket_count: 0,
+  messages: [],
 };
 
 export const SocketSlice = createSlice({
@@ -26,9 +27,15 @@ export const SocketSlice = createSlice({
 
       return state;
     },
+
+    SOCKET_GET_MESSAGES: (state, { payload }) => {
+      state.messages = payload;
+
+      return state;
+    },
   },
 });
 
-export const { SOCKET_SET_CONNECTION_DATA, RESET_SOCKET, SOCKET_SET_LIVE_USER } = SocketSlice.actions;
+export const { SOCKET_SET_CONNECTION_DATA, RESET_SOCKET, SOCKET_SET_LIVE_USER, SOCKET_GET_MESSAGES } = SocketSlice.actions;
 
 export default SocketSlice.reducer;

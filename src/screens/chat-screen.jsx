@@ -1,16 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
-import { DisconnectSocket } from "~/actions/socket-actions";
+import { ChatSendNewMessages, DisconnectSocket } from "~/actions/socket-actions";
 import { StartSocketConnection } from "~/actions/socket-actions";
 
 const ChatScreen = (props) => {
+  const [new_message, setNewMessage] = useState("");
   useEffect(() => {
     props.name && props.Start_Socket_Connection();
   }, []);
 
   const disconnectSocket = () => {
     props.Disconnect_Socket();
+  };
+
+  const SubmitMessage = () => {
+    props.Chat_Send_New_Messages(new_message);
+    setNewMessage("");
   };
 
   return (
@@ -20,6 +26,17 @@ const ChatScreen = (props) => {
         <h1>Room {props.room}</h1>
         <button onClick={disconnectSocket}>Disconnect</button>{" "}
       </div>
+
+      <div>
+        {props.messages.map((message, i) => {
+          return <div key={i}>{message.message}</div>;
+        })}
+      </div>
+
+      <input type="text" value={new_message} onChange={(e) => setNewMessage(e.target.value)} placeholder="new message..." />
+      <button disabled={new_message.length === 0} onClick={SubmitMessage}>
+        Submit
+      </button>
     </div>
   );
 };
@@ -27,10 +44,12 @@ const ChatScreen = (props) => {
 const mapStateToProps = (state) => ({
   name: state.join_store.name,
   room: state.join_store.room,
+  messages: state.socket_store.messages,
   socket_count: state.socket_store.socket_count,
 });
 const mapDispatchToProps = (dispatch) => ({
   Disconnect_Socket: () => dispatch(DisconnectSocket()),
   Start_Socket_Connection: () => dispatch(StartSocketConnection()),
+  Chat_Send_New_Messages: (message) => dispatch(ChatSendNewMessages(message)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

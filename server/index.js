@@ -17,7 +17,7 @@ const io = new Server(httpServer, {
 
 let user_list = {};
 
-const SendSocketCount = async ({ socket, room, event, name }) => {
+const SendSocketCount = async ({ room, event, name }) => {
   const socket_connected = await io.in(room).fetchSockets();
 
   if (event === "join") {
@@ -54,20 +54,20 @@ const SendSocketCount = async ({ socket, room, event, name }) => {
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
-    SendSocketCount({ socket, room: null, event: "disconnect" });
+    SendSocketCount({ room: null, event: "disconnect" });
   });
 
   socket.on("join", async ({ name, room }) => {
     socket.join(room);
-    SendSocketCount({ socket, room, event: "join", name });
+    SendSocketCount({ room, event: "join", name });
 
     const messages = await MessageModel.find({ room });
     io.to(room).emit("messages", messages);
   });
 
   socket.on("leaveRoom", async (room) => {
-    socket.leave(room);
-    SendSocketCount({ socket, room, event: "leave" });
+    socket.disconnect();
+    SendSocketCount({ room, event: "leave" });
   });
 
   socket.on("newMessages", async ({ message: new_message, room }) => {

@@ -17,7 +17,7 @@ const io = new Server(httpServer, {
 
 let user_list = {};
 
-const SendSocketCount = async ({ room, event, name }) => {
+const SendSocketList = async ({ socket, room, event, name }) => {
   const socket_connected = await io.in(room).fetchSockets();
 
   if (event === "join") {
@@ -35,6 +35,9 @@ const SendSocketCount = async ({ room, event, name }) => {
       if (!Object.hasOwn(temp_obj, key)) {
         room = user_list[key].room;
         console.log("user disconnected", user_list[key].name);
+
+        const messages = await MessageModel.find({ room });
+        socket.to(room).emit("messages", [...messages, { message: `${user_list[key].name} left`, room }]);
         delete user_list[key];
         break;
       }
@@ -54,20 +57,21 @@ const SendSocketCount = async ({ room, event, name }) => {
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
-    SendSocketCount({ room: null, event: "disconnect" });
+    SendSocketList({ socket, room: null, event: "disconnect" });
   });
 
   socket.on("join", async ({ name, room }) => {
     socket.join(room);
-    SendSocketCount({ room, event: "join", name });
+    SendSocketList({ room, event: "join", name });
 
     const messages = await MessageModel.find({ room });
-    io.to(room).emit("messages", messages);
+    socket.emit("messages", [...messages, { message: `Welcome ${name}`, room }]);
+    socket.to(room).emit("messages", [...messages, { message: `${name} joined`, room }]);
   });
 
   socket.on("leaveRoom", async (room) => {
     socket.disconnect();
-    SendSocketCount({ room, event: "leave" });
+    SendSocketList({ room, event: "leave" });
   });
 
   socket.on("newMessages", async ({ message: new_message, room }) => {

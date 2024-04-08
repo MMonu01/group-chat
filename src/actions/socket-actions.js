@@ -36,8 +36,8 @@ export const StartSocketConnection = () => (dispatch, getState) => {
     }
   });
 
-  socket.on("live", (user_count) => {
-    dispatch(SOCKET_SET_LIVE_USER(user_count));
+  socket.on("live", (socket_list) => {
+    dispatch(SOCKET_SET_LIVE_USER(socket_list));
   });
 
   socket.on("messages", (messages) => {

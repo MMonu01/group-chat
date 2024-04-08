@@ -22,9 +22,18 @@ const ChatScreen = (props) => {
   return (
     <div>
       <div style={{ textAlign: "center" }}>
-        <h1>Live users {props.socket_count}</h1>
-        <h1>Room {props.room}</h1>
+        <h1>Live users {props.socket_list.length}</h1>
+        <h1>
+          Room {props.room} Name {props.name}
+        </h1>
         <button onClick={disconnectSocket}>Disconnect</button>{" "}
+      </div>
+
+      <div style={{ display: "flex", gap: "10px" }}>
+        USER LIST:{" "}
+        {props.socket_list.map((user, i) => {
+          return <div key={i}>{user.name}</div>;
+        })}
       </div>
 
       <div>
@@ -45,7 +54,7 @@ const mapStateToProps = (state) => ({
   name: state.join_store.name,
   room: state.join_store.room,
   messages: state.socket_store.messages,
-  socket_count: state.socket_store.socket_count,
+  socket_list: state.socket_store.socket_list,
 });
 const mapDispatchToProps = (dispatch) => ({
   Disconnect_Socket: () => dispatch(DisconnectSocket()),

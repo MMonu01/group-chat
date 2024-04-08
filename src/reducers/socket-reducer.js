@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   socket: null,
   socket_id: null,
-  socket_count: 0,
+  socket_list: [],
   messages: [],
 };
 
@@ -23,7 +23,7 @@ export const SocketSlice = createSlice({
     },
 
     SOCKET_SET_LIVE_USER: (state, { payload }) => {
-      state.socket_count = payload;
+      state.socket_list = payload;
 
       return state;
     },

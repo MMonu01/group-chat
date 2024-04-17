@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import AppRoute from "~/routes";
 
@@ -9,10 +11,15 @@ function App(props) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    // props.Startup_Get_Initial_Data();
+    props.Startup_Get_Initial_Data();
   }, []);
 
-  return <AppRoute />;
+  return (
+    <>
+      <AppRoute />
+      <ToastContainer position="bottom-center" autoClose={3000} closeOnClick={false} />
+    </>
+  );
 }
 
 const mapStateToProps = (state) => ({

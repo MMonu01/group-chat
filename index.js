@@ -9,7 +9,8 @@ import { Connection } from "./server/config/db.js";
 import passport from "./server/services/passport.js";
 import { ImplimentSocketIo } from "./server/services/socket.js";
 
-import { serverRouter } from "./server/server-routes.js";
+import { ViewsRouter } from "./server/views.js";
+import { userRouter } from "./server/routes/user-router.js";
 
 const PORT = process.env.PORT || 9050;
 const isProduction = process.env.NODE_ENV === "production";
@@ -31,6 +32,8 @@ app.use(passport.session());
 
 ImplimentSocketIo(httpServer);
 
+app.use("/user", userRouter);
+
 let vite;
 if (!isProduction) {
   const { createServer } = await import("vite");
@@ -43,7 +46,7 @@ if (!isProduction) {
   app.use(express.static("./dist"));
 }
 
-app.get("*", serverRouter, async (req, res, next) => {
+app.get("*", ViewsRouter, async (req, res, next) => {
   try {
     const url = req.originalUrl;
 

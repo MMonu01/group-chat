@@ -19,7 +19,7 @@ passport.serializeUser(function (user, cb) {
   return cb(null, {
     id: user.id,
     username: user.displayName,
-    picture: user.picture,
+    avatar: user.picture,
     email: user.email,
   });
 });

@@ -7,6 +7,8 @@ import { BrowserRouter } from "react-router-dom";
 import { store, persistor } from "~/store";
 import App from "./App.jsx";
 
+import "~/styles/style.css";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>

@@ -4,17 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 9051 --open",
+    "dev": " node index",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "cross-env NODE_ENV=production node index",
     "server": "Nodemon server/index.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.1.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "mongoose": "^8.3.0",
     "nodemon": "^3.1.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth2": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",

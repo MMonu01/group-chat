@@ -4,6 +4,17 @@ import { roomModel, joinRoomModel } from "../model/room-model.js";
 
 export const roomRouter = express.Router();
 
+roomRouter.get("/getrooms", async (req, res, next) => {
+  const user_email = req.user.email;
+  console.log("user email", user_email);
+  try {
+    const room = await joinRoomModel.find({ user_email });
+    res.send(room);
+  } catch (err) {
+    next(err);
+  }
+});
+
 roomRouter.post("/createroom", async (req, res) => {
   const { room_name } = req.body;
   const user_email = req.user.email;

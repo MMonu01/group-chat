@@ -3,11 +3,14 @@ import { connect } from "react-redux";
 
 import { ChatSendNewMessages, DisconnectSocket } from "~/actions/socket-actions";
 import { StartSocketConnection } from "~/actions/socket-actions";
+import { GetRoomData } from "~/actions/chat-actions";
 
 const ChatScreen = (props) => {
   const [new_message, setNewMessage] = useState("");
   useEffect(() => {
-    props.name && props.Start_Socket_Connection();
+    // props.name && props.Start_Socket_Connection();
+    props.Get_Room_Data();
+    console.log("hello");
   }, []);
 
   const disconnectSocket = () => {
@@ -60,5 +63,6 @@ const mapDispatchToProps = (dispatch) => ({
   Disconnect_Socket: () => dispatch(DisconnectSocket()),
   Start_Socket_Connection: () => dispatch(StartSocketConnection()),
   Chat_Send_New_Messages: (message) => dispatch(ChatSendNewMessages(message)),
+  Get_Room_Data: () => dispatch(GetRoomData()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

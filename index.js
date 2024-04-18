@@ -11,6 +11,7 @@ import { ImplimentSocketIo } from "./server/services/socket.js";
 
 import { ViewsRouter } from "./server/views.js";
 import { userRouter } from "./server/routes/user-router.js";
+import { roomRouter } from "./server/routes/room-router.js";
 
 const PORT = process.env.PORT || 9050;
 const isProduction = process.env.NODE_ENV === "production";
@@ -33,6 +34,7 @@ app.use(passport.session());
 ImplimentSocketIo(httpServer);
 
 app.use("/user", userRouter);
+app.use("/room", roomRouter);
 
 let vite;
 if (!isProduction) {

@@ -9,14 +9,6 @@ import LoginScreen from "~/screens/login-screen";
 const AppRoute = (props) => {
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!props.name) {
-  //     navigate("/");
-  //   } else {
-  //     navigate("/chat");
-  //   }
-  // }, [props.name]);
-
   return (
     <Routes>
       <Route path="/" element={<JoinScreen />} />
@@ -27,6 +19,6 @@ const AppRoute = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  name: state.join_store.name,
+  name: state.login_store.name,
 });
 export default connect(mapStateToProps)(AppRoute);

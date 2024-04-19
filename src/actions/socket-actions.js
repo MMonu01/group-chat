@@ -1,12 +1,12 @@
 import { io } from "socket.io-client";
 import { ApiUrl } from "~/env";
 
-import { LOGOUT } from "~/reducers/join-reducer";
+import { LOGOUT } from "~/reducers/login-reducer";
 import { SOCKET_SET_CONNECTION_DATA, SOCKET_SET_LIVE_USER, RESET_SOCKET, SOCKET_GET_MESSAGES } from "~/reducers/socket-reducer";
 
 export const StartSocketConnection = () => (dispatch, getState) => {
-  const { join_store } = getState();
-  const { name, room } = join_store;
+  const { login_store } = getState();
+  const { name, room } = login_store;
 
   const socket = io(ApiUrl);
 
@@ -47,9 +47,9 @@ export const StartSocketConnection = () => (dispatch, getState) => {
 };
 
 export const DisconnectSocket = () => (dispatch, getState) => {
-  const { socket_store, join_store } = getState();
+  const { socket_store, login_store } = getState();
   const { socket } = socket_store;
-  const { room } = join_store;
+  const { room } = login_store;
 
   socket.emit("leaveRoom", room);
   dispatch(RESET_SOCKET());
@@ -57,9 +57,9 @@ export const DisconnectSocket = () => (dispatch, getState) => {
 };
 
 export const ChatSendNewMessages = (message) => (dispatch, getState) => {
-  const { socket_store, join_store } = getState();
+  const { socket_store, login_store } = getState();
   const { socket } = socket_store;
-  const { room } = join_store;
+  const { room } = login_store;
 
   socket.emit("newMessages", { message, room });
 };

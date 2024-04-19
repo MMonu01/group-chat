@@ -10,7 +10,6 @@ const ChatScreen = (props) => {
   useEffect(() => {
     // props.name && props.Start_Socket_Connection();
     props.Get_Room_Data();
-    console.log("hello");
   }, []);
 
   const disconnectSocket = () => {
@@ -25,17 +24,17 @@ const ChatScreen = (props) => {
   return (
     <div>
       <div style={{ textAlign: "center" }}>
-        <h1>Live users {props.socket_list.length}</h1>
+        <h1>Live users {props.room_list.length}</h1>
         <h1>
-          Room {props.room} Name {props.name}
+          Room {props.room} Name {props.username}
         </h1>
         <button onClick={disconnectSocket}>Disconnect</button>{" "}
       </div>
 
       <div style={{ display: "flex", gap: "10px" }}>
-        USER LIST:{" "}
-        {props.socket_list.map((user, i) => {
-          return <div key={i}>{user.name}</div>;
+        Group LIST:{" "}
+        {props.room_list.map((room, i) => {
+          return <div key={i}>{room.room_name}</div>;
         })}
       </div>
 
@@ -54,10 +53,10 @@ const ChatScreen = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  name: state.join_store.name,
-  room: state.join_store.room,
+  username: state.login_store.username,
+  room: state.login_store.room,
   messages: state.socket_store.messages,
-  socket_list: state.socket_store.socket_list,
+  room_list: state.chat_store.room_list,
 });
 const mapDispatchToProps = (dispatch) => ({
   Disconnect_Socket: () => dispatch(DisconnectSocket()),

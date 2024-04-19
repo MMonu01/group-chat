@@ -38,11 +38,17 @@ roomRouter.post("/joinroom", async (req, res) => {
     const room = await roomModel.findOne({ _id: room_id });
 
     if (!!room) {
-      const join_obj = { room_id, user_email: req.user.email, room_name: room.room_name };
-      const new_join = new joinRoomModel(join_obj);
-      new_join.save();
+      const is_user_joined = await joinRoomModel.findOne({ user_email: req.user.email });
+
+      if (!is_user_joined) {
+        const join_obj = { room_id, user_email: req.user.email, room_name: room.room_name };
+        const new_join = new joinRoomModel(join_obj);
+        new_join.save();
+      }
+      res.send({ ok: true });
+    } else {
+      res.send({ ok: false });
     }
-    res.send({ ok: true });
   } catch {
     res.send({ ok: false });
   }

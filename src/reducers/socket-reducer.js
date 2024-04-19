@@ -7,8 +7,8 @@ const initialState = {
   messages: [],
 };
 
-export const SocketSlice = createSlice({
-  name: "loginSlice",
+export const ChatSlice = createSlice({
+  name: "SocketSlice",
   initialState,
   reducers: {
     SOCKET_SET_CONNECTION_DATA: (state, { payload }) => {
@@ -36,6 +36,6 @@ export const SocketSlice = createSlice({
   },
 });
 
-export const { SOCKET_SET_CONNECTION_DATA, RESET_SOCKET, SOCKET_SET_LIVE_USER, SOCKET_GET_MESSAGES } = SocketSlice.actions;
+export const { SOCKET_SET_CONNECTION_DATA, RESET_SOCKET, SOCKET_SET_LIVE_USER, SOCKET_GET_MESSAGES } = ChatSlice.actions;
 
-export default SocketSlice.reducer;
+export default ChatSlice.reducer;

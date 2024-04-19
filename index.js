@@ -12,6 +12,7 @@ import { ImplimentSocketIo } from "./server/services/socket.js";
 import { ViewsRouter } from "./server/views.js";
 import { userRouter } from "./server/routes/user-router.js";
 import { roomRouter } from "./server/routes/room-router.js";
+import { messageRouter } from "./server/routes/message-router.js";
 
 const PORT = process.env.PORT || 9050;
 const isProduction = process.env.NODE_ENV === "production";
@@ -35,6 +36,7 @@ ImplimentSocketIo(httpServer);
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
+app.use("/message", messageRouter);
 
 let vite;
 if (!isProduction) {

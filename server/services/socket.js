@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Server } from "socket.io";
 
-import { MessageModel } from "../model/message-mode.js";
+import { messageModel } from "../model/message-model.js";
 
 let user_list = {};
 
@@ -19,7 +19,7 @@ export function ImplimentSocketIo(httpServer) {
       socket.join(room);
       SendSocketList({ room, io, event: "join", name });
 
-      const messages = await MessageModel.find({ room });
+      const messages = await messageModel.find({ room });
       socket.emit("messages", [...messages, { message: `Welcome ${name}`, room }]);
       socket.to(room).emit("messages", [...messages, { message: `${name} joined`, room }]);
     });
@@ -30,10 +30,10 @@ export function ImplimentSocketIo(httpServer) {
     });
 
     socket.on("newMessages", async ({ message: new_message, room }) => {
-      const newMessage = new MessageModel({ message: new_message, room });
+      const newMessage = new messageModel({ message: new_message, room });
       await newMessage.save();
 
-      const message = await MessageModel.find({ room });
+      const message = await messageModel.find({ room });
       io.to(room).emit("messages", message);
     });
   });
@@ -58,7 +58,7 @@ const SendSocketList = async ({ socket, io, room, event, name }) => {
         room = user_list[key].room;
         console.log("user disconnected", user_list[key].name);
 
-        const messages = await MessageModel.find({ room });
+        const messages = await messageModel.find({ room });
         socket.to(room).emit("messages", [...messages, { message: `${user_list[key].name} left`, room }]);
         delete user_list[key];
         break;

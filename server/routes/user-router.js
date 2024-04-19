@@ -5,7 +5,7 @@ export const userRouter = express.Router();
 userRouter.get("/userDetails", async (req, res, next) => {
   try {
     if (!req.isAuthenticated()) {
-      res.send({ logged_in_success: false });
+      res.sen({ logged_in_success: false });
     } else {
       const { username, avatar, email } = req.user;
       res.send({ logged_in_success: true, username, avatar, email });

@@ -15,7 +15,7 @@ roomRouter.get("/getrooms", async (req, res, next) => {
   }
 });
 
-roomRouter.post("/createroom", async (req, res) => {
+roomRouter.post("/createroom", async (req, res, next) => {
   const { room_name } = req.body;
   const user_email = req.user.email;
   try {
@@ -27,12 +27,11 @@ roomRouter.post("/createroom", async (req, res) => {
     new_join.save();
     res.send({ ok: true });
   } catch (err) {
-    console.error(err);
-    res.send({ ok: false });
+    next(err);
   }
 });
 
-roomRouter.post("/joinroom", async (req, res) => {
+roomRouter.post("/joinroom", async (req, res, next) => {
   const { room_id } = req.body;
   try {
     const room = await roomModel.findOne({ _id: room_id });
@@ -50,6 +49,6 @@ roomRouter.post("/joinroom", async (req, res) => {
       res.send({ ok: false });
     }
   } catch {
-    res.send({ ok: false });
+    next(err);
   }
 });

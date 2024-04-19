@@ -51,12 +51,12 @@ export const GetUserLogout = () => (dispatch) => {
     .then((res) => (res.ok ? res.text() : Promise.reject(res)))
     .catch((err) => {
       if (err instanceof Error) {
-        // Alertify.error(`Could not get user details ${err}`);
+        Alertify.error(`Could not logouts ${err}`);
         console.log(err);
       } else {
         err.text().then((err) => {
-          // const error_message = ErrorExtractor(err);
-          // Alertify.error(error_message);
+          const error_message = ErrorExtractor(err);
+          Alertify.error(error_message);
           console.log(err);
         });
       }

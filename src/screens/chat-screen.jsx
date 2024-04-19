@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { ChatSendNewMessages, DisconnectSocket } from "~/actions/socket-actions";
 import { StartSocketConnection } from "~/actions/socket-actions";
-import { GetRoomData } from "~/actions/chat-actions";
+import { GetRoomData, GetMessageData } from "~/actions/chat-actions";
 
 const ChatScreen = (props) => {
   const [new_message, setNewMessage] = useState("");
@@ -21,6 +21,10 @@ const ChatScreen = (props) => {
     setNewMessage("");
   };
 
+  const getMessages = (room_id) => {
+    props.Get_Message_Data(room_id);
+  };
+
   return (
     <div>
       <div style={{ textAlign: "center" }}>
@@ -34,7 +38,11 @@ const ChatScreen = (props) => {
       <div style={{ display: "flex", gap: "10px" }}>
         Group LIST:{" "}
         {props.room_list.map((room, i) => {
-          return <div key={i}>{room.room_name}</div>;
+          return (
+            <div onClick={() => getMessages(room._id)} key={i}>
+              {room.room_name}
+            </div>
+          );
         })}
       </div>
 
@@ -63,5 +71,6 @@ const mapDispatchToProps = (dispatch) => ({
   Start_Socket_Connection: () => dispatch(StartSocketConnection()),
   Chat_Send_New_Messages: (message) => dispatch(ChatSendNewMessages(message)),
   Get_Room_Data: () => dispatch(GetRoomData()),
+  Get_Message_Data: (room_id) => dispatch(GetMessageData(room_id)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

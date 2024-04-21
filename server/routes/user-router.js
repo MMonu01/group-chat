@@ -1,5 +1,7 @@
 import express from "express";
 
+import { userModel } from "../model/user-model.js";
+
 export const userRouter = express.Router();
 
 userRouter.get("/userDetails", async (req, res, next) => {
@@ -7,8 +9,10 @@ userRouter.get("/userDetails", async (req, res, next) => {
     if (!req.isAuthenticated()) {
       res.send({ logged_in_success: false });
     } else {
-      const { username, avatar, email } = req.user;
-      res.send({ logged_in_success: true, username, avatar, email });
+      const { email } = req.user;
+      const user_details = await userModel.findOne({ email }, { username: 1, avatar: 1 });
+      const { _id, avatar, username } = user_details;
+      res.send({ logged_in_success: true, email, _id, avatar, username });
     }
   } catch (err) {
     next(err);

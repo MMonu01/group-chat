@@ -5,6 +5,8 @@ const messageSchema = new mongoose.Schema({
   room_id: { type: String, required: true },
   message: { type: String, required: true },
   user_email: { type: String, required: true },
+  user_avatar: { type: String, required: true },
+  username: { type: String, required: true },
 });
 
 export const messageModel = mongoose.model("message", messageSchema);

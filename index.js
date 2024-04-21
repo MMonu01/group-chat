@@ -1,10 +1,9 @@
 import fs from "fs";
 import express from "express";
 import { createServer } from "http";
+import { Server } from "socket.io";
 import session from "express-session";
 import "dotenv/config";
-
-import { Connection } from "./server/config/db.js";
 
 import passport from "./server/services/passport.js";
 import { ImplimentSocketIo } from "./server/services/socket.js";
@@ -13,6 +12,8 @@ import { ViewsRouter } from "./server/views.js";
 import { userRouter } from "./server/routes/user-router.js";
 import { roomRouter } from "./server/routes/room-router.js";
 import { messageRouter } from "./server/routes/message-router.js";
+
+import { Connection } from "./server/config/db.js";
 
 const PORT = process.env.PORT || 9050;
 const isProduction = process.env.NODE_ENV === "production";
@@ -30,9 +31,13 @@ app.use(
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
   })
 );
+
 app.use(passport.session());
 
-ImplimentSocketIo(httpServer);
+const io = new Server(httpServer, {
+  cors: { origin: process.env.ORIGIN },
+});
+ImplimentSocketIo(io);
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);

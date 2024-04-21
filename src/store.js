@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage/session";
+import storage from "redux-persist/lib/storage";
 
 import SocketReducer from "~/reducers/socket-reducer";
 import LoginReducer from "~/reducers/login-reducer";
@@ -11,7 +11,7 @@ const rootReducer = combineReducers({ socket_store: SocketReducer, login_store: 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["login_store"],
+  whitelist: ["chat_store", "login_store"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

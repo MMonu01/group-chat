@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 
 import { roomModel, joinRoomModel } from "../model/room-model.js";
 
@@ -8,7 +9,7 @@ roomRouter.get("/getrooms", async (req, res, next) => {
   const user_email = req.user.email;
   console.log("user email", user_email);
   try {
-    const room = await joinRoomModel.find({ user_email });
+    const room = await joinRoomModel.find({ user_email }, { room_id: 1, room_name: 1, _id: 0 });
     res.send(room);
   } catch (err) {
     next(err);
@@ -25,7 +26,8 @@ roomRouter.post("/createroom", async (req, res, next) => {
     const join_obj = { room_id: new_room._id, user_email, room_name: new_room.room_name };
     const new_join = new joinRoomModel(join_obj);
     new_join.save();
-    res.send({ ok: true });
+
+    res.send({ room_id: new_room.id, room_name: room_name });
   } catch (err) {
     next(err);
   }
@@ -34,21 +36,22 @@ roomRouter.post("/createroom", async (req, res, next) => {
 roomRouter.post("/joinroom", async (req, res, next) => {
   const { room_id } = req.body;
   try {
-    const room = await roomModel.findOne({ _id: room_id });
-
+    const room = await roomModel.findOne({ _id: new mongoose.Types.ObjectId(room_id) });
     if (!!room) {
-      const is_user_joined = await joinRoomModel.findOne({ user_email: req.user.email });
+      const is_user_joined = await joinRoomModel.findOne({ user_email: req.user.email, room_id });
 
       if (!is_user_joined) {
         const join_obj = { room_id, user_email: req.user.email, room_name: room.room_name };
         const new_join = new joinRoomModel(join_obj);
         new_join.save();
+        res.send({ ok: true, room_id, room_name: room.room_name });
+      } else {
+        res.send({ ok: false, message: "Already joined" });
       }
-      res.send({ ok: true });
     } else {
-      res.send({ ok: false });
+      res.send({ ok: false, message: "Invalid group id" });
     }
-  } catch {
+  } catch (err) {
     next(err);
   }
 });

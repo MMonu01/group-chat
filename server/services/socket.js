@@ -1,40 +1,42 @@
 import "dotenv/config";
-import { Server } from "socket.io";
 
+import { userModel } from "../model/user-model.js";
 import { messageModel } from "../model/message-model.js";
 
 let user_list = {};
 
-export function ImplimentSocketIo(httpServer) {
-  const io = new Server(httpServer, {
-    cors: { origin: process.env.ORIGIN },
-  });
-
+export function ImplimentSocketIo(io) {
   io.on("connection", (socket) => {
+    socket.on("join", async ({ room_id, username }) => {
+      socket.join(room_id);
+      SendSocketList({ room: room_id, io, event: "join", name: username });
+    });
+
     socket.on("disconnect", () => {
       SendSocketList({ io, socket, room: null, event: "disconnect" });
     });
+    // socket.on("join", async ({ name, room }) => {
+    //   socket.join(room);
+    //   SendSocketList({ room, io, event: "join", name });
+    //   const messages = await messageModel.find({ room });
+    //   socket.emit("messages", [...messages, { message: `Welcome ${name}`, room }]);
+    //   socket.to(room).emit("messages", [...messages, { message: `${name} joined`, room }]);
+    // });
+    // socket.on("leaveRoom", async (room) => {
+    //   socket.disconnect();
+    //   SendSocketList({ room, io, event: "leave" });
+    // });
+    socket.on("newMessage", async ({ message: new_message, room_id, user_id }) => {
+      const user_details = await userModel.findOne({ _id: user_id });
 
-    socket.on("join", async ({ name, room }) => {
-      socket.join(room);
-      SendSocketList({ room, io, event: "join", name });
+      const user_email = user_details.email;
+      const user_avatar = user_details.avatar;
+      const username = user_details.username;
 
-      const messages = await messageModel.find({ room });
-      socket.emit("messages", [...messages, { message: `Welcome ${name}`, room }]);
-      socket.to(room).emit("messages", [...messages, { message: `${name} joined`, room }]);
-    });
-
-    socket.on("leaveRoom", async (room) => {
-      socket.disconnect();
-      SendSocketList({ room, io, event: "leave" });
-    });
-
-    socket.on("newMessages", async ({ message: new_message, room }) => {
-      const newMessage = new messageModel({ message: new_message, room });
+      const newMessage = new messageModel({ message: new_message, room_id, user_email, user_avatar, username });
       await newMessage.save();
 
-      const message = await messageModel.find({ room });
-      io.to(room).emit("messages", message);
+      io.to(room_id).emit("newMessage", newMessage);
     });
   });
 }
@@ -45,7 +47,7 @@ const SendSocketList = async ({ socket, io, room, event, name }) => {
   if (event === "join") {
     let id = socket_connected[socket_connected.length - 1].id;
     user_list[id] = { name, room };
-    console.log("user connected", user_list[id].name);
+    console.log("user joined", user_list[id].name);
   } else {
     let all_socket = await io.fetchSockets();
     let temp_obj = {};
@@ -58,8 +60,8 @@ const SendSocketList = async ({ socket, io, room, event, name }) => {
         room = user_list[key].room;
         console.log("user disconnected", user_list[key].name);
 
-        const messages = await messageModel.find({ room });
-        socket.to(room).emit("messages", [...messages, { message: `${user_list[key].name} left`, room }]);
+        // const messages = await messageModel.find({ room });
+        // socket.to(room).emit("messages", [...messages, { message: `${user_list[key].name} left`, room }]);
         delete user_list[key];
         break;
       }
@@ -74,5 +76,5 @@ const SendSocketList = async ({ socket, io, room, event, name }) => {
     }
   }
 
-  io.to(room).emit("live", socket_list);
+  io.to(room).emit("online", socket_list.length);
 };

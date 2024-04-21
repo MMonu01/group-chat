@@ -4,6 +4,8 @@ const initialState = {
   username: "",
   avatar: "",
   logged_in_success: false,
+  email: "",
+  user_id: "",
 };
 
 export const LoginSlice = createSlice({
@@ -14,6 +16,8 @@ export const LoginSlice = createSlice({
       state.username = payload.username;
       state.avatar = payload.avatar;
       state.logged_in_success = payload.logged_in_success;
+      state.email = payload.email;
+      state.user_id = payload._id;
 
       return state;
     },

@@ -1,6 +1,6 @@
 import { ApiUrl } from "~/env";
 
-import { CHAT_SET_ROOMS_DATA } from "~/reducers/chat-reducer";
+import { CHAT_SET_ROOMS_DATA, SET_CURRENT_ROOM, CHAT_SET_MESSAGE_LIST, CHAT_SET_NEW_ROOM } from "~/reducers/chat-reducer";
 
 import { Alertify } from "~/scripts/Alertify";
 import { ErrorExtractor } from "~/scripts/Error-extractor";
@@ -37,7 +37,7 @@ export const GetMessageData = (room_id) => (dispatch) => {
   })
     .then((res) => (res.ok ? res.json() : Promise.reject(res)))
     .then((data) => {
-      console.log("data", data);
+      dispatch(CHAT_SET_MESSAGE_LIST(data));
     })
     .catch((err) => {
       if (err instanceof Error) {
@@ -60,7 +60,7 @@ export const CreateNewRoom = (room_name) => (dispatch) => {
   })
     .then((res) => (res.ok ? res.json() : Promise.reject(res)))
     .then((data) => {
-      console.log("data", data);
+      dispatch(CHAT_SET_NEW_ROOM(data));
     })
     .catch((err) => {
       if (err instanceof Error) {
@@ -83,7 +83,11 @@ export const JoinNewRoom = (room_id) => (dispatch) => {
   })
     .then((res) => (res.ok ? res.json() : Promise.reject(res)))
     .then((data) => {
-      return Promise.resolve(data);
+      if (data.ok) {
+        dispatch(CHAT_SET_NEW_ROOM(data));
+      } else {
+        alert(data.message);
+      }
     })
     .catch((err) => {
       if (err instanceof Error) {
@@ -97,4 +101,8 @@ export const JoinNewRoom = (room_id) => (dispatch) => {
 
       return Promise.reject();
     });
+};
+
+export const SetCurrentRoom = (room) => (dispatch) => {
+  dispatch(SET_CURRENT_ROOM(room));
 };

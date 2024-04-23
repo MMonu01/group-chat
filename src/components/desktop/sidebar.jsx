@@ -1,14 +1,17 @@
 import { useState, useRef } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AddIcon } from "@chakra-ui/icons";
 import { Drawer, DrawerBody, DrawerFooter, DrawerHeader, DarkMode, DrawerOverlay, DrawerContent, DrawerCloseButton } from "@chakra-ui/react";
 
-import { AddIcon } from "@chakra-ui/icons";
-
+import { GetUserLogout } from "~/actions/login-actions";
 import { CreateNewRoom, JoinNewRoom } from "~/actions/chat-actions";
 
 const Sidebar = ({ isOpen, onClose, ...props }) => {
-  const [new_room, setNewRoom] = useState("");
   const [room_id, setRoomId] = useState("");
+  const [new_room, setNewRoom] = useState("");
+
+  const navigate = useNavigate();
 
   const joinRoom = () => {
     props.Join_New_Room(room_id);
@@ -20,6 +23,15 @@ const Sidebar = ({ isOpen, onClose, ...props }) => {
     props.Create_New_Room(new_room);
     setNewRoom("");
     onClose();
+  };
+
+  const onLogout = () => {
+    props
+      .Get_User_Logout()
+      .then(() => {
+        navigate("/login");
+      })
+      .catch(() => {});
   };
 
   const is_create_room_disabled = new_room.trim().length < 3;
@@ -60,7 +72,7 @@ const Sidebar = ({ isOpen, onClose, ...props }) => {
             </DrawerBody>
 
             <DrawerFooter>
-              <button type="button" class="mb-2 block border border-red-600 w-full rounded bg-red-600 px-6 p-2 py-3 text-xs font-medium uppercase leading-normal text-white  hover:bg-primary-accent-300 hover:bg-red-700 active:bg-red-800">
+              <button type="button" onClick={onLogout} class="mb-2 block border border-red-600 w-full rounded bg-red-600 px-6 p-2 py-3 text-xs font-medium uppercase leading-normal text-white  hover:bg-primary-accent-300 hover:bg-red-700 active:bg-red-800">
                 Logout
               </button>
             </DrawerFooter>
@@ -72,6 +84,7 @@ const Sidebar = ({ isOpen, onClose, ...props }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  Get_User_Logout: () => dispatch(GetUserLogout()),
   Join_New_Room: (room_id) => dispatch(JoinNewRoom(room_id)),
   Create_New_Room: (room_name) => dispatch(CreateNewRoom(room_name)),
 });

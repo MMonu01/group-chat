@@ -43,7 +43,22 @@ const ChatScreen = (props) => {
           <div id="chat-box" className="h-full flex flex-col bg-slate-100 overflow-auto p-4">
             {props.message_list.map((message, i) => {
               return (
-                <div key={i} className={`mb-4  rounded-xl px-2 py-2 sm:px-4 ${message.user_email === props.email ? "self-end bg-white" : "self-start bg-zinc-900 text-black"}`} style={{ maxWidth: "500px" }}>
+                <div key={i} class={`flex  ${message.user_email === props.email ? "flex-row-reverse" : "flex-row"} gap-2.5 mb-4`}>
+                  <img src={message.user_avatar || props.avatar} alt="User image" class="w-10 h-11 rounded-full" />
+                  <div class="grid">
+                    <h5 class={`text-gray-900 text-sm font-semibold leading-snug pb-1 ${message.user_email === props.email ? "text-end" : "text-start"}  capitalize`}>{message.username || "Stranger"}</h5>
+                    <div class="w-max grid">
+                      <div class="px-3.5 py-2 bg-gray-100 rounded justify-start  items-center gap-3 inline-flex">
+                        <h5 class="text-gray-900 text-sm font-normal leading-snug text-wrap" style={{ maxWidth: "400px" }}>
+                          {message.message}
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {/* <div key={i} className={`mb-4  rounded-xl px-2 py-2 sm:px-4 ${message.user_email === props.email ? "self-end bg-white" : "self-start bg-zinc-900 text-black"}`} style={{ maxWidth: "500px" }}>
                   <div className="flex">
                     <img className="-ml-1 mr-4 h-8 w-8 rounded-full" src={message.user_avatar || props.avatar} />
                     <div className="flex max-w-3xl items-center text-md text-gray-300">{message.username || "Nothing"}</div>
@@ -51,9 +66,19 @@ const ChatScreen = (props) => {
                   <div className="flex max-w-3xl items-center text-white text-sm text-gray-400  ml-12">
                     <p>{message.message}</p>
                   </div>
+                </div> */}
+
+            {/* <div class=" flex">
+              <div class="grid w-fit ml-auto">
+                <div class="px-3 py-2 bg-indigo-600 rounded ">
+                  <h2 class="text-white text-sm font-normal leading-snug">Anyone on for lunch today</h2>
                 </div>
-              );
-            })}
+                <div class="justify-start items-center inline-flex">
+                  <h3 class="text-gray-500 text-xs font-normal leading-4 py-1">You</h3>
+                </div>
+              </div>
+              <img src="https://pagedone.io/asset/uploads/1704091591.png" alt="Hailey image" class="w-10 h-11" />
+            </div> */}
           </div>
           <div className="flex rounded-lg" style={{ height: "60px" }}>
             <input

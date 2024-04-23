@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import AppRoute from "~/routes";
+import AppRoute from "~/routes/desktop-routes";
 
 import { StartupGetInitialData } from "~/actions/startup-actions";
 

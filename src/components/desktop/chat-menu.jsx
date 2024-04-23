@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { connect } from "react-redux";
 import { useDisclosure } from "@chakra-ui/react";
-import { SettingsIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 import Sidebar from "~/components/desktop/sidebar";
 
@@ -20,18 +20,18 @@ const ChatMenu = (props) => {
   return (
     <>
       <Sidebar isOpen={isOpen} onClose={onClose} />
-      <div className="p-4 flex justify-between items-center">
+      <div className="p-4 pb-2 flex justify-between items-center">
         <div className="flex gap-2 text-sm items-center">
           <img className="h-12 w-12 rounded-full border-2 border-green-700" src={props.avatar} />
           <div>{props.username}</div>
         </div>
 
         <div ref={btnRef} onClick={onOpen} className="cursor-pointer p-y-2">
-          <SettingsIcon />
+          <HamburgerIcon w={6} h={6} />
         </div>
       </div>
 
-      <div className="p-2 border-t border-b mb-2 border-gray-400">
+      <div className="p-2 mb-2 border-gray-400">
         <div className="relative">
           <input
             id="search-chats"
@@ -57,10 +57,10 @@ const ChatMenu = (props) => {
           </button>
         </div>
       </div>
-      <div className="flex flex-col items-center gap-4 pt-2">
+      <div className="flex flex-col items-center gap-2 p-2">
         {props.room_list.map((room, i) => {
           return (
-            <div onClick={() => getCurrentRoomData(room)} className="bg-zinc-800 w-full p-2 hover:bg-zinc-700 cursor-pointer " key={i}>
+            <div onClick={() => getCurrentRoomData(room)} className={`w-full p-2 hover:bg-black cursor-pointer ${props.current_room.room_id === room.room_id ? "bg-black" : "bg-teal-800"}`} key={i}>
               <div className="text-xl text-gray-200">{room.room_name}</div>
               <div className="text-sm text-gray-400">preview of the room</div>
             </div>

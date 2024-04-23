@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { connect } from "react-redux";
+import { useDisclosure } from "@chakra-ui/react";
+import { SettingsIcon } from "@chakra-ui/icons";
+
+import Sidebar from "~/components/mobile/sidebar";
 
 import { SocketJoinRoom } from "~/actions/socket-actions";
 import { SetCurrentRoom, CreateNewRoom, JoinNewRoom } from "~/actions/chat-actions";
 
 const ChatMenu = (props) => {
+  const btnRef = useRef();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [new_room, setNewRoom] = useState("");
   const [room_id, setRoomId] = useState("");
 
@@ -27,14 +34,17 @@ const ChatMenu = (props) => {
   };
 
   return (
-    <div className="bg-zinc-900 text-white overflow-auto" style={{ width: "400px" }}>
+    <>
+      <Sidebar isOpen={isOpen} onClose={onClose} />
       <div className="p-4 flex justify-between items-center">
         <div className="flex gap-2 text-sm items-center">
           <img className="h-12 w-12 rounded-full border-2 border-green-700" src={props.avatar} />
           <div>{props.username}</div>
         </div>
 
-        <div className="cursor-pointer p-y-2">---</div>
+        <div ref={btnRef} onClick={onOpen} className="cursor-pointer p-y-2">
+          <SettingsIcon />
+        </div>
       </div>
 
       <div className="p-2 border-t border-b mb-2 border-gray-400">
@@ -87,7 +97,7 @@ const ChatMenu = (props) => {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

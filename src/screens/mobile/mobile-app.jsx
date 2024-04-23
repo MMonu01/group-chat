@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import AppRoute from "~/routes";
+import MobileRoute from "~/routes/mobile-routes";
 
 import { StartupGetInitialData } from "~/actions/startup-actions";
 
-function App(props) {
-  const [count, setCount] = useState(0);
-
+function MobileApp(props) {
   useEffect(() => {
     props.Startup_Get_Initial_Data();
   }, []);
 
   return (
     <>
-      <AppRoute />
+      <MobileRoute />
       <ToastContainer position="bottom-center" autoClose={3000} closeOnClick={false} />
     </>
   );
@@ -28,4 +26,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   Startup_Get_Initial_Data: () => dispatch(StartupGetInitialData()),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(MobileApp);

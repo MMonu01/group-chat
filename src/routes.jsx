@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 
-import JoinScreen from "~/screens/Join-screen";
-import ChatScreen from "~/screens/chat-screen";
-import LoginScreen from "~/screens/login-screen";
+import JoinScreen from "~/screens/desktop/Join-screen";
+import ChatScreen from "~/screens/desktop/chat-screen";
+import LoginScreen from "~/screens/desktop/login-screen";
 
 const AppRoute = (props) => {
   const navigate = useNavigate();

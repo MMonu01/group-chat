@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
-import ChatMenu from "~/components/chat-menu";
+import ChatMenu from "~/components/desktop/chat-menu";
 
 import { ChatSendNewMessages } from "~/actions/socket-actions";
 import { StartSocketConnection } from "~/actions/socket-actions";
@@ -31,7 +31,9 @@ const ChatScreen = (props) => {
 
   return (
     <div className="w-screen h-screen bg-zinc-800 flex ">
-      <ChatMenu />
+      <div className="bg-zinc-900 text-white overflow-auto" style={{ width: "400px" }}>
+        <ChatMenu />
+      </div>
       <div className="bg-orange-400 w-screen flex flex-col">
         <div className="bg-white flex justify-between items-center px-8" style={{ height: "70px" }}>
           <div className="text-3xl text-green-700">{Object.hasOwn(props.current_room, "room_id") ? props.current_room.room_name : "Header"}</div>

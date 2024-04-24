@@ -4,7 +4,7 @@ import { ApiUrl } from "~/env";
 import { GetMessageData } from "~/actions/chat-actions";
 
 import { LOGOUT } from "~/reducers/login-reducer";
-import { SOCKET_SET_CONNECTION_DATA, SOCKET_SET_LIVE_USER, RESET_SOCKET, SOCKET_GET_MESSAGES } from "~/reducers/socket-reducer";
+import { SOCKET_SET_CONNECTION_DATA, RESET_SOCKET } from "~/reducers/socket-reducer";
 import { SET_ONLINE_USERS_COUNT, CHAT_SET_NEW_MESSAGE } from "~/reducers/chat-reducer";
 
 export const StartSocketConnection = () => (dispatch, getState) => {
@@ -13,7 +13,6 @@ export const StartSocketConnection = () => (dispatch, getState) => {
   socket.on("connect", () => {
     console.log("socket connected", socket.id);
     dispatch(SOCKET_SET_CONNECTION_DATA({ socket, socket_id: socket.id }));
-    dispatch(SocketJoinRoom());
   });
 
   socket.on("connect_error", (error) => {
@@ -64,7 +63,6 @@ export const SocketJoinRoom = () => (dispatch, getState) => {
   const { current_room } = chat_store;
   const { username } = login_store;
   const { socket } = socket_store;
-  console.log("socket", socket);
 
   if (Object.keys(current_room).length > 0) {
     socket.emit("join", { room_id: current_room.room_id, username });

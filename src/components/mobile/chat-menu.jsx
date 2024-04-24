@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { useDisclosure } from "@chakra-ui/react";
+import { Avatar, useDisclosure } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 
 import Sidebar from "~/components/mobile/sidebar";
@@ -38,7 +38,7 @@ const ChatMenu = (props) => {
       <Sidebar isOpen={isOpen} onClose={onClose} />
       <div className="p-4 flex justify-between items-center">
         <div className="flex gap-2 text-sm items-center">
-          <img className="h-12 w-12 rounded-full border-2 border-green-700" src={props.avatar} />
+          <Avatar name="User Image" src={props.avatar} />
           <div>{props.username}</div>
         </div>
 
@@ -77,8 +77,13 @@ const ChatMenu = (props) => {
         {props.room_list.map((room, i) => {
           return (
             <div onClick={() => getCurrentRoomData(room)} className="bg-zinc-800 w-full p-2 hover:bg-zinc-700 cursor-pointer " key={i}>
-              <div className="text-xl text-gray-200">{room.room_name}</div>
-              <div className="text-sm text-gray-400">preview of the room</div>
+              <div>
+                <Avatar name="User Image" h={8} w={8} src={"https://bit.ly/broken-link"} />
+              </div>
+              <div>
+                <div className="text-xl text-gray-200">{room.room_name}</div>
+                <div className="text-sm text-gray-400">preview of the room</div>
+              </div>
             </div>
           );
         })}

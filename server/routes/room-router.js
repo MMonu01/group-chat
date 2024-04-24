@@ -5,11 +5,18 @@ import { roomModel, joinRoomModel } from "../model/room-model.js";
 
 export const roomRouter = express.Router();
 
-roomRouter.get("/getrooms", async (req, res, next) => {
+roomRouter.post("/getrooms", async (req, res, next) => {
   const user_email = req.user.email;
-  console.log("user email", user_email);
+  const { search } = req.body;
+
+  const query_obj = { user_email };
+
+  if (!!search) {
+    query_obj.room_name = { $regex: search };
+  }
+
   try {
-    const room = await joinRoomModel.find({ user_email }, { room_id: 1, room_name: 1, _id: 0 });
+    const room = await joinRoomModel.find(query_obj, { room_id: 1, room_name: 1, _id: 0 });
     res.send(room);
   } catch (err) {
     next(err);

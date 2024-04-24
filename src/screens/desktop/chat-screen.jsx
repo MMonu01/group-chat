@@ -1,129 +1,64 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
+import { Badge, Stack, useDisclosure } from "@chakra-ui/react";
 
 import ChatMenu from "~/components/desktop/chat-menu";
+import MessageContainer from "~/components/desktop/message-container";
 
-import { ChatSendNewMessages } from "~/actions/socket-actions";
-import { StartSocketConnection } from "~/actions/socket-actions";
-import { GetRoomData } from "~/actions/chat-actions";
+import { GetRoomData, SetCurrentRoom } from "~/actions/chat-actions";
+import { StartSocketConnection, SocketJoinRoom } from "~/actions/socket-actions";
 
 const ChatScreen = (props) => {
-  const [new_message, setNewMessage] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     props.Start_Socket_Connection();
-    props.Get_Room_Data();
+    props.Get_Room_Data().then((room_list) => {
+      if (room_list.length > 0) {
+        if (Object.keys(props.current_room).length > 0) {
+          props.Socket_Join_Room();
+        } else {
+          props.Set_Current_Room(room_list[0]);
+          props.Socket_Join_Room();
+        }
+      }
+    });
   }, []);
 
-  useEffect(() => {
-    if (props.question !== "") {
-      const textarea = document.getElementById("chat-box");
-      textarea.scrollTop = textarea.scrollHeight;
-    }
-  }, [props.message_list]);
-
-  const SubmitMessage = () => {
-    props.Chat_Send_New_Messages(new_message);
-    setNewMessage("");
-  };
-
-  const is_btn_disabled = new_message.trim().length < 1;
-
   return (
-    <div className="w-screen h-screen bg-zinc-800 flex ">
-      <div className="bg-zinc-900 text-white overflow-auto" style={{ width: "400px" }}>
-        <ChatMenu />
+    <div className="w-screen h-screen flex ">
+      <div className="bg-zinc-900 text-white overflow-auto  bg-[hsl(218,23%,23%)]" style={{ width: "400px" }}>
+        <ChatMenu isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       </div>
-      <div className="bg-orange-400 w-screen flex flex-col">
-        <div className="bg-white flex justify-between items-center px-8" style={{ height: "70px" }}>
-          <div className="text-3xl text-green-700">{Object.hasOwn(props.current_room, "room_id") ? props.current_room.room_name : "Header"}</div>
-          <div className="">online {props.online_users}</div>{" "}
-        </div>
-        <div className="h-screen overflow-auto flex flex-col relative">
-          <div id="chat-box" className="h-full flex flex-col bg-slate-100 overflow-auto p-4">
-            {props.message_list.map((message, i) => {
-              return (
-                <div key={i} class={`flex  ${message.user_email === props.email ? "flex-row-reverse" : "flex-row"} gap-2.5 mb-4`}>
-                  <img src={message.user_avatar || props.avatar} alt="User image" class="w-10 h-11 rounded-full" />
-                  <div class="grid">
-                    <h5 class={`text-gray-900 text-sm font-semibold leading-snug pb-1 ${message.user_email === props.email ? "text-end" : "text-start"}  capitalize`}>{message.username || "Stranger"}</h5>
-                    <div class="w-max grid">
-                      <div class="px-3.5 py-2 bg-gray-100 rounded justify-start  items-center gap-3 inline-flex">
-                        <h5 class="text-gray-900 text-sm font-normal leading-snug text-wrap" style={{ maxWidth: "400px" }}>
-                          {message.message}
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-            {/* <div key={i} className={`mb-4  rounded-xl px-2 py-2 sm:px-4 ${message.user_email === props.email ? "self-end bg-white" : "self-start bg-zinc-900 text-black"}`} style={{ maxWidth: "500px" }}>
-                  <div className="flex">
-                    <img className="-ml-1 mr-4 h-8 w-8 rounded-full" src={message.user_avatar || props.avatar} />
-                    <div className="flex max-w-3xl items-center text-md text-gray-300">{message.username || "Nothing"}</div>
-                  </div>
-                  <div className="flex max-w-3xl items-center text-white text-sm text-gray-400  ml-12">
-                    <p>{message.message}</p>
-                  </div>
-                </div> */}
-
-            {/* <div class=" flex">
-              <div class="grid w-fit ml-auto">
-                <div class="px-3 py-2 bg-indigo-600 rounded ">
-                  <h2 class="text-white text-sm font-normal leading-snug">Anyone on for lunch today</h2>
-                </div>
-                <div class="justify-start items-center inline-flex">
-                  <h3 class="text-gray-500 text-xs font-normal leading-4 py-1">You</h3>
-                </div>
-              </div>
-              <img src="https://pagedone.io/asset/uploads/1704091591.png" alt="Hailey image" class="w-10 h-11" />
-            </div> */}
+      <div className={`bg-gray-200 w-screen flex flex-col items-center justify-center`}>
+        {Object.keys(props.current_room).length > 0 ? (
+          <MessageContainer />
+        ) : (
+          <div className="p-4 flex flex-col gap-2">
+            <div className="text-xl font-semibold">You are not currently in any group: </div>
+            <Stack direction="row">
+              <Badge onClick={onOpen} colorScheme="green" className="cursor-pointer">
+                Create group
+              </Badge>
+              <Badge onClick={onOpen} colorScheme="purple" className="cursor-pointer">
+                Join group
+              </Badge>
+            </Stack>
           </div>
-          <div className="flex rounded-lg" style={{ height: "60px" }}>
-            <input
-              type="text"
-              id="hs-leading-button-add-on"
-              name="hs-leading-button-add-on"
-              value={new_message}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Write your message..."
-              className="py-3 px-4 block w-full border-gray-200 outline-none shadow-sm text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-              style={{ height: "60px" }}
-            />
-            <button
-              type="button"
-              disabled={is_btn_disabled}
-              onClick={SubmitMessage}
-              className="py-3 px-8 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-s-md border border-transparent bg-teal-900 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ height: "60px" }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M10 14l11 -11"></path>
-                <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
-              </svg>
-              {/* Button */}
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  avatar: state.login_store.avatar,
-  email: state.login_store.email,
-  username: state.login_store.username,
   room_list: state.chat_store.room_list,
-  message_list: state.chat_store.message_list,
   current_room: state.chat_store.current_room,
-  online_users: state.chat_store.online_users,
 });
 const mapDispatchToProps = (dispatch) => ({
-  Start_Socket_Connection: () => dispatch(StartSocketConnection()),
-  Chat_Send_New_Messages: (message) => dispatch(ChatSendNewMessages(message)),
   Get_Room_Data: () => dispatch(GetRoomData()),
+  Socket_Join_Room: () => dispatch(SocketJoinRoom()),
+  Start_Socket_Connection: () => dispatch(StartSocketConnection()),
+  Set_Current_Room: (current_room) => dispatch(SetCurrentRoom(current_room)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

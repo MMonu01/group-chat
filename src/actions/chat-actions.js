@@ -9,11 +9,18 @@ import { ErrorExtractor } from "~/scripts/Error-extractor";
  * @description function to get user logout
  * @returns  {Promise}
  */
-export const GetRoomData = () => (dispatch) => {
-  return fetch(`${ApiUrl}/room/getrooms`)
+export const GetRoomData = (search) => (dispatch) => {
+  return fetch(`${ApiUrl}/room/getrooms`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ search: search || "" }),
+  })
     .then((res) => (res.ok ? res.json() : Promise.reject(res)))
     .then((data) => {
       dispatch(CHAT_SET_ROOMS_DATA(data));
+
+      return Promise.resolve(data);
     })
     .catch((err) => {
       if (err instanceof Error) {

@@ -26,14 +26,14 @@ ViewsRouter.get("/login", (req, res, next) => {
   next();
 });
 
-ViewsRouter.get("/", (req, res, next) => {
-  req.meta_title = "join screen";
+ViewsRouter.get("/chat", (req, res, next) => {
+  req.meta_title = "chat screen";
 
   next();
 });
 
-ViewsRouter.get("/chat", (req, res, next) => {
-  req.meta_title = "chat screen";
+ViewsRouter.get("/message", (req, res, next) => {
+  req.meta_title = "message screen";
 
   next();
 });

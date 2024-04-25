@@ -1,18 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import AppRoute from "~/routes";
+import DesktopRoute from "~/routes/desktop-routes";
 
 import { StartupGetInitialData } from "~/actions/startup-actions";
 
 function App(props) {
-  const [count, setCount] = useState(0);
-
   useEffect(() => {
-    // props.Startup_Get_Initial_Data();
+    props.Startup_Get_Initial_Data();
   }, []);
 
-  return <AppRoute />;
+  return (
+    <>
+      <DesktopRoute />
+      <ToastContainer position="bottom-center" autoClose={3000} closeOnClick={false} />
+    </>
+  );
 }
 
 const mapStateToProps = (state) => ({

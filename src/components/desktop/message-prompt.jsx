@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -6,6 +6,10 @@ import { ChatSendNewMessages } from "~/actions/socket-actions";
 
 const MessagePrompt = (props) => {
   const [new_message, setNewMessage] = useState("");
+
+  useEffect(() => {
+    document.getElementById("MessageArea").focus();
+  }, []);
 
   const is_btn_disabled = new_message.trim().length < 1;
 
@@ -17,15 +21,17 @@ const MessagePrompt = (props) => {
   const handleEnter = (e) => {
     if (e.keyCode === 13 && !is_btn_disabled) {
       submitMessage();
+      setNewMessage("");
     }
+    document.getElementById("MessageArea").focus();
   };
 
   return (
     <div className="relative">
-      <textarea name="message input" value={new_message} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={handleEnter} className="p-4 pb-12 block w-full outline-none  text-sm disabled:pointer-events-none" placeholder="Write your message..." />
+      <textarea name="message input" id="MessageArea" value={new_message} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={handleEnter} className="p-4 pb-12 block w-full outline-none text-sm disabled:pointer-events-none" style={{ height: "6px" }} placeholder="Write your message..." />
 
       {/* <!-- Toolbar --> */}
-      <div className="absolute bottom-px inset-x-px p-2 rounded-b-md bg-white">
+      <div className="bottom-px inset-x-px p-2 rounded-b-md bg-white">
         <div className="flex justify-between items-center">
           {/* <!-- Button Group --> */}
           <div className="flex items-center">
@@ -35,7 +41,7 @@ const MessagePrompt = (props) => {
                 <rect width="18" height="18" x="3" y="3" rx="2" />
                 <line x1="9" x2="15" y1="15" y2="9" />
               </svg>
-            </button> */}
+            </button> 
             {/* <!-- End Mic Button --> */}
 
             {/* <!-- Attach Button --> */}
@@ -57,7 +63,7 @@ const MessagePrompt = (props) => {
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 <line x1="12" x2="12" y1="19" y2="22" />
               </svg>
-            </button> */}
+            </button> *
             {/* <!-- End Mic Button --> */}
 
             {/* <!-- Send Button --> */}

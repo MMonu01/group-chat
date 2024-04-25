@@ -10,7 +10,7 @@ const MessageContainer = (props) => {
       const textarea = document.getElementById("chat-box");
       textarea.scrollTop = textarea.scrollHeight;
     }
-  }, [props.message_list[0]]);
+  }, [props.message_list[0], props.message_list.length]);
 
   return (
     <>

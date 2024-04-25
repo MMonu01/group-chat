@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { connect } from "react-redux";
-import { Avatar, useDisclosure, Text } from "@chakra-ui/react";
+import { Avatar, Text } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 
 import Sidebar from "~/components/desktop/sidebar";

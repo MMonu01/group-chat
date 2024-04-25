@@ -9,7 +9,7 @@ export const ViewsRouter = express.Router();
 
 ViewsRouter.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-ViewsRouter.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), function (req, res) {
+ViewsRouter.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), function (req, res) {
   req.login(req.user, function (err) {
     if (err) {
       return next(err);
@@ -20,7 +20,7 @@ ViewsRouter.get("/auth/google/callback", passport.authenticate("google", { failu
 
 ViewsRouter.use(AuthMiddleware);
 
-ViewsRouter.get("/login", (req, res, next) => {
+ViewsRouter.get("/", (req, res, next) => {
   req.meta_title = "login screen";
 
   next();

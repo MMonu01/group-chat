@@ -29,7 +29,7 @@ const Sidebar = ({ isOpen, onClose, ...props }) => {
     props
       .Get_User_Logout()
       .then(() => {
-        navigate("/login");
+        navigate("/");
       })
       .catch(() => {});
   };

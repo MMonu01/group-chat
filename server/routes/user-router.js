@@ -25,6 +25,6 @@ userRouter.post("/logout", function (req, res, next) {
       return next(err);
     }
     console.log("logout successfull");
-    res.redirect("/login");
+    res.redirect("/");
   });
 });

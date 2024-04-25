@@ -33,9 +33,7 @@ export const StartSocketConnection = () => (dispatch, getState) => {
     if (socket.active) {
       // temporary failure, the socket will automatically try to reconnect
     } else {
-      // the connection was forcefully closed by the server or the client itself
-      // dispatch(RESET_SOCKET());
-      // dispatch(LOGOUT());
+      socket.connect();
     }
   });
 

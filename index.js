@@ -34,9 +34,7 @@ app.use(
 
 app.use(passport.session());
 
-const io = new Server(httpServer, {
-  cors: { origin: process.env.ORIGIN },
-});
+const io = new Server(httpServer);
 ImplimentSocketIo(io);
 
 app.use("/user", userRouter);

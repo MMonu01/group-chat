@@ -6,8 +6,7 @@
   "scripts": {
     "dev": " node index",
     "build": "vite build",
-    "preview": "cross-env NODE_ENV=production node index",
-    "server": "Nodemon server/index.js"
+    "preview": "cross-env NODE_ENV=production node index"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
